@@ -175,7 +175,7 @@
 
         <div class="pure-g">
             <div class="l-box-lrg pure-u-1 pure-u-md-2-5">
-                <form class="pure-form pure-form-stacked">
+                <form id="contact_form" class="pure-form pure-form-stacked">
                     <fieldset>
 
                         <label for="name">Your Name</label>
@@ -186,9 +186,9 @@
                         <input id="email" type="email" placeholder="Your Email">
 
                         <label for="password">Your Password</label>
-                        <input id="password" type="password" placeholder="Your Password">
+                        <textarea placeholder="Your message" id="msg" name="msg" cols="55" rows="6"></textarea>
 
-                        <button type="submit" class="pure-button">Sign Up</button>
+                        <button type="submit" class="pure-button">Send</button>
                     </fieldset>
                 </form>
             </div>
@@ -231,6 +231,55 @@ app.yui.use('node-base', 'node-event-delegate', function (Y) {
     Y.one('body').delegate('click', function (e) {
         e.preventDefault();
     }, 'a[href="#"]');
+});
+</script>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script type="text/javascript">
+    
+    $('#yourButtonId').click(function() {
+        
+            jQuery(function($)  
+{
+    $("#contact_form").submit(function()
+    {
+        var email = $("#email").val(); // get email field value
+        var name = $("#name").val(); // get name field value
+        var msg = $("#msg").val(); // get message field value
+        $.ajax(
+        {
+            type: "POST",
+            url: "https://mandrillapp.com/api/1.0/messages/send.json",
+            data: {
+                'key': 'sVRLFidC1A7K56TuUkyUQg',
+                'message': {
+                    'from_email': 'ahmad.haggag@gmail.com',
+                    'from_name': name,
+                    'headers': {
+                        'Reply-To': email
+                    },
+                    'subject': 'HAGGAG.NET Contact Form Submission',
+                    'text': msg,
+                    'to': [
+                    {
+                        'email': 'ahmad.haggag@gmail.com',
+                        'name': 'Ahmad Haggag Website',
+                        'type': 'to'
+                    }]
+                }
+            }
+        })
+        .done(function(response) {
+            alert('Your message has been sent. Thank you!'); // show success message
+            $("#name").val(''); // reset field after successful submission
+            $("#email").val(''); // reset field after successful submission
+            $("#msg").val(''); // reset field after successful submission
+        })
+        .fail(function(response) {
+            alert('Error sending message.');
+        });
+        return false; // prevent page refresh
+    });
 });
 </script>
 
